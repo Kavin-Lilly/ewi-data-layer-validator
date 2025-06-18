@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EWI Data Layer Validator - Test page</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background: #f9f9f9;
+    }
+    .header {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #8A1538;
+      margin-bottom: 1rem;
+    }
+    .subheading {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      color: #333;
+    }
+    ul.benefits {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+      list-style-type: "✅ ";
+      line-height: 1.8;
+      color: #444;
+    }
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.95rem;
+      color: #666;
+    }
+    .floating-validator {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background-color: #8A1538;
+      color: white;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+  </style>
+  <script src="https://assets.adobedtm.com/d8c48e012a5d/02b110536527/launch-c9b519cd2268.min.js" async></script>
+</head>
+<body>
+
+  <div class="header">EWI Data Layer Validator</div>
+  <div class="subheading">Built for analytics teams to QA data layer events in real-time, with zero back-and-forth.</div>
+
+  <ul class="benefits">
+    <li>Validates `adobeDataLayer` events against strict schemas</li>
+    <li>Highlights missing or malformed fields instantly in the console</li>
+    <li>Reduces back-and-forth between devs, QA, and analytics</li>
+    <li>Supports real-time listening with auto-logging for `page_view` and `link_click`</li>
+    <li>Lightweight — does not interfere with your production page</li>
+    <li>Floating validator panel for quick visibility and toggling</li>
+  </ul>
+
+  <div class="footer">To test, push a sample data layer event from the console. All results appear there with color-coded logs.</div>
+
+  <button class="floating-validator" onclick="alert('Validator panel already loaded 👀')">
+     Validator
+  </button>
+
+  <script>
+    const scriptsToLoad = [
+      { src: "/Users/L091690/Desktop/Data Layer Validator/Page View Schema.js",       label: "1 --> Page View Schema for Data Layer loaded" },
+      { src: "/Users/L091690/Desktop/Data Layer Validator/Link Click Schema.js",       label: "2 --> Link Click Schema for Data Layer loaded" },
+      { src: "/Users/L091690/Desktop/Data Layer Validator/validate against schema.js", label: "3 --> Packet Validation (schema) loaded" },
+      { src: "/Users/L091690/Desktop/Data Layer Validator/Validation runtime check.js", label: "4 --> Packet Validation (run-time) loaded" },
+      { src: "/Users/L091690/Desktop/Data Layer Validator/Logging results.js",         label: "5 --> Console Logging loaded" },
+      { src: "/Users/L091690/Desktop/Data Layer Validator/Display Results.js",         label: "6 --> Attach Listeners loaded" },
+      { src: "/Users/L091690/Desktop/Data Layer Validator/color codings.js",           label: "7 --> Color Coding loaded" }
+    ];
+  
+    const lillyColor = 'background: #8A1538; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold;';
+  
+    function loadScriptSequentially(index = 0) {
+      if (index >= scriptsToLoad.length) {
+        // All scripts loaded — show the final message after 1000ms
+        setTimeout(() => {
+          console.log('%cREADY TO PUSH THE TEST DATA LAYER FROM THIS CONSOLE BUT THIS IS A REALTIME ON THE ACTUAL PAGES', 'background: black; color: white; padding: 6px 12px; border-radius: 4px; font-weight: bold;');
+        }, 2000);
+        return;
+      }
+  
+      const { src, label } = scriptsToLoad[index];
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => {
+        console.log(`%c${label}`, lillyColor);
+        setTimeout(() => loadScriptSequentially(index + 1), 1000); // wait 1s before loading next
+      };
+      script.onerror = () => {
+        console.error(`%cFailed to load script: ${src}`, 'color: red; font-weight: bold;');
+      };
+  
+      document.body.appendChild(script);
+    }
+  
+    // Initial welcome message
+    console.log('%c__________________________________EWI DATA LAYER VALIDATOR__________________________________', 'background: black; color: white; padding: 6px 12px; border-radius: 4px; font-weight: bold;');
+  
+    // Start loading one by one
+    loadScriptSequentially();
+  </script>
+</body>
+</html>
